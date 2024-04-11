@@ -34,7 +34,6 @@ public class Maze {
                 newCol += dy[i];
             }
         }
-
         return neighbors;
     }
 
