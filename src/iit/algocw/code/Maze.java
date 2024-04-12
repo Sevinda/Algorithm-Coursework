@@ -1,7 +1,9 @@
 package iit.algocw.code;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <h1>Maze</h1>
@@ -16,6 +18,7 @@ public class Maze {
 
     /**
      * <h2>Maze Constructor</h2>
+     *
      * @param mazeData the data of the maze in the format of a 2d array
      */
     public Maze(char[][] mazeData) {
@@ -34,10 +37,10 @@ public class Maze {
      * <h3>getNeighborNodes function</h3>
      * <p>Neighbors are nodes where it is adjacent to a wall or it is the last node in the maze</p>
      * @param currentNode the current node where the pointer is.
-     * @return the list of neighbors the "current node" has.
+     * @return the map of neighbors the "current node" and gCost.
      */
-    public List<Node> getNeighborNodes(Node currentNode) {
-        List<Node> neighbors = new ArrayList<>();
+    public Map<Node, Integer> getNeighborNodes(Node currentNode) {
+        Map<Node, Integer> neighbors = new HashMap<>();
 
         int[] xDirection = {0, 0, -1, 1};
         int[] yDirection = {-1, 1, 0, 0};
@@ -45,14 +48,16 @@ public class Maze {
         for (int i = 0; i < 4; i++) {
             int newNodeRow = currentNode.getRow();
             int newNodeCol = currentNode.getCol();
+            int gCostCounter = 0;
 
             while ((newNodeRow >= 0 && newNodeRow < nodes.length) && (newNodeCol >= 0 && newNodeCol < nodes[0].length) && !nodes[newNodeRow][newNodeCol].isWall()) {
                 newNodeRow += xDirection[i];
                 newNodeCol += yDirection[i];
+                gCostCounter++;
             }
 
             if (newNodeRow != currentNode.getRow() || newNodeCol != currentNode.getCol())
-                neighbors.add(nodes[newNodeRow][newNodeCol]);
+                neighbors.put(nodes[newNodeRow][newNodeCol], gCostCounter);
         }
 
         return neighbors;

@@ -6,16 +6,16 @@ package iit.algocw.code;
  * <p>col - col of the node</p>
  * <p>isWall - is the node a wall (obstacle)</p>
  * <p>gCost - is a distance from a starting node</p>
- * <p>hCost (Heuristic) - Euclidean distance between the goal and the current node.</p>
+ * <p>hCost (Heuristic) - Euclidean distance between the finishing node and the current node.</p>
  * <p>fCost - gCost + hCost</p>
  */
 public class Node {
     private int row;
     private int col;
     private boolean isWall;
-    private int gCost;
-    private int hCost;
-    private int fCost;
+    private double gCost;
+    private double hCost;
+    private double fCost;
 
     public Node(int row, int col, boolean isWall) {
         this.row = row;
@@ -47,27 +47,27 @@ public class Node {
         isWall = wall;
     }
 
-    public int getgCost() {
+    public double getgCost() {
         return gCost;
     }
 
-    public void setgCost(int gCost) {
+    public void setgCost(double gCost) {
         this.gCost = gCost;
     }
 
-    public int gethCost() {
+    public double gethCost() {
         return hCost;
     }
 
-    public void sethCost(int hCost) {
+    public void sethCost(double hCost) {
         this.hCost = hCost;
     }
 
-    public int getfCost() {
+    public double getfCost() {
         return fCost;
     }
 
-    public void setfCost(int fCost) {
+    public void setfCost(double fCost) {
         this.fCost = fCost;
     }
 
