@@ -1,8 +1,6 @@
 package iit.algocw.code;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +34,7 @@ public class Maze {
     /**
      * <h3>getNeighborNodes function</h3>
      * <p>Neighbors are nodes where it is adjacent to a wall or it is the last node in the maze</p>
+     *
      * @param currentNode the current node where the pointer is.
      * @return the map of neighbors the "current node" and gCost.
      */
@@ -50,7 +49,7 @@ public class Maze {
             int newNodeCol = currentNode.getCol();
             int gCostCounter = 0;
 
-            while ((newNodeRow >= 0 && newNodeRow < nodes.length) && (newNodeCol >= 0 && newNodeCol < nodes[0].length) && !nodes[newNodeRow][newNodeCol].isWall()) {
+            while ((newNodeRow + xDirection[i] >= 0 && newNodeRow + xDirection[i] < nodes.length) && (newNodeCol + yDirection[i] >= 0 && newNodeCol + yDirection[i] < nodes[0].length) && !nodes[newNodeRow + xDirection[i]][newNodeCol + yDirection[i]].isWall()) {
                 newNodeRow += xDirection[i];
                 newNodeCol += yDirection[i];
                 gCostCounter++;
@@ -87,3 +86,29 @@ public class Maze {
         this.nodes = nodes;
     }
 }
+
+//    public Map<Node, Integer> getNeighborNodes(Node currentNode) {
+//        Map<Node, Integer> neighbors = new HashMap<>();
+//
+//        int[] xDirection = {0, 0, -1, 1};
+//        int[] yDirection = {-1, 1, 0, 0};
+//
+//        for (int i = 0; i < 4; i++) {
+//            int newNodeRow = currentNode.getRow() + xDirection[i];
+//            int newNodeCol = currentNode.getCol() + yDirection[i];
+//            int gCostCounter = 0;
+//
+//            while (newNodeRow >= 0 && newNodeRow < nodes.length && newNodeCol >= 0 && newNodeCol < nodes[0].length && nodes[newNodeRow][newNodeCol].isWall()) {
+//                newNodeRow += xDirection[i];
+//                newNodeCol += yDirection[i];
+//                gCostCounter++;
+//            }
+//
+//            // Add the neighbor node and its associated gCost to the map
+//            if (newNodeRow != currentNode.getRow() || newNodeCol != currentNode.getCol()) {
+//                neighbors.put(nodes[newNodeRow][newNodeCol], gCostCounter);
+//            }
+//        }
+//
+//        return neighbors;
+//    }

@@ -29,8 +29,6 @@ public class AStar {
         while (!openQueue.isEmpty()) {
             Node currentNode = openQueue.poll();
 
-            // TODO: if current == goal return the path (you have to construct the path somehow) idk yet THINK!!!
-
             if (currentNode.equals(finish)) {
                 return reconstructPath(cameFrom, finish);
             }
@@ -38,7 +36,6 @@ public class AStar {
             closedSet.add(currentNode);
 
             Map<Node, Integer> neighborNodes = maze.getNeighborNodes(currentNode);
-
             for (Map.Entry<Node, Integer> entry: neighborNodes.entrySet()) {
                 Node neighbor = entry.getKey();
                 Integer gCost = entry.getValue();
@@ -48,7 +45,7 @@ public class AStar {
                 double newGCost = currentNode.getgCost() + gCost;
 
                 if (!openQueue.contains(neighbor) || newGCost < neighbor.getgCost()) {
-                    cameFrom.put(currentNode, neighbor);
+                    cameFrom.put(neighbor, currentNode);
                     neighbor.setgCost(newGCost);
                     neighbor.sethCost(calculateHCost(neighbor, finish));
                     neighbor.setfCost(calculateFCost(neighbor));
@@ -94,11 +91,14 @@ public class AStar {
         List<Node> path = new ArrayList<>();
         path.add(current);
 
+        System.out.println(cameFrom);
+
         while (cameFrom.containsKey(current)) {
             current = cameFrom.get(current);
-            path.add(0, current);
+            path.add(current);
         }
 
+        Collections.reverse(path);
         return path;
     }
 }

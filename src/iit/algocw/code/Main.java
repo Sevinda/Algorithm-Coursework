@@ -1,36 +1,63 @@
 package iit.algocw.code;
 
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-//        int[][] grid;
-//
-//        // Initialize a 2D array with 3 rows and 4 columns
-//        grid = new int[3][4];
-//
-//        // Assign values to the elements of the 2D array
-//        grid[0][0] = 1;
-//        grid[0][1] = 2;
-//        grid[0][2] = 3;
-//        grid[0][3] = 4;
-//        grid[1][0] = 5;
-//        grid[1][1] = 6;
-//        grid[1][2] = 7;
-//        grid[1][3] = 8;
-//        grid[2][0] = 9;
-//        grid[2][1] = 10;
-//        grid[2][2] = 11;
-//        grid[2][3] = 12;
-//
-//        // Access and print elements of the 2D array
-//        for (int i = 0; i < grid.length; i++) {
-//            for (int j = 0; j < grid[i].length; j++) {
-//                System.out.print(grid[i][j] + " ");
-//            }
-//            System.out.println(); // Move to the next row after printing all columns
-//        }
-//
-//        System.out.println(grid[0].length);
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("src/iit/algocw/example_mazes/maze10_3.txt"));
+            List<String> lines = new ArrayList<>();
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                lines.add(line);
+            }
+            bufferedReader.close();
+
+            char[][] mazeData = new char[lines.size()][];
+            for (int i = 0; i < lines.size(); i++) {
+                mazeData[i] = lines.get(i).toCharArray();
+            }
+
+            Maze maze = new Maze(mazeData);
+            AStar aStar = new AStar();
+
+            Node start = null;
+            Node finish = null;
+
+            for (int i = 0; i < maze.getRows(); i++) {
+                for (int j = 0; j < maze.getCols(); j++) {
+                    if (maze.getNodes()[i][j].isWall()) continue;
+
+                    if (mazeData[i][j] == 'S') {
+                        start = maze.getNodes()[i][j];
+                    } else if (mazeData[i][j] == 'F') {
+                        finish = maze.getNodes()[i][j];
+                    }
+                }
+            }
+
+            if (start != null && finish != null) {
+                List<Node> shortestPath = aStar.findShortestDistance(maze, start, finish);
+                if (shortestPath != null) {
+                    System.out.println("Shortest path from start to finish:");
+                    for (int i = 0; i < shortestPath.size(); i++) {
+                        Node node = shortestPath.get(i);
+                        System.out.println((i + 1) + ". Move to (" + node.getRow() + ", " + node.getCol() + ")");
+                    }
+                    System.out.println("Done!");
+                } else {
+                    System.out.println("No path found from start to finish.");
+                }
+            } else {
+                System.out.println("Start or finish node not found in the maze.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
