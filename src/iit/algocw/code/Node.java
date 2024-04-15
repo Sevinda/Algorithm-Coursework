@@ -16,11 +16,35 @@ public class Node {
     private double gCost;
     private double hCost;
     private double fCost;
+    private boolean isStart = false;
+    private boolean isFinish = false;
 
+    /**
+     * <h2>Node Constructor</h2>
+     * @param row the row number in which the node is located
+     * @param col the col number in which the node is located
+     * @param isWall if true, the node is a wall
+     */
     public Node(int row, int col, boolean isWall) {
         this.row = row;
         this.col = col;
         this.isWall = isWall;
+    }
+
+    public boolean isStart() {
+        return isStart;
+    }
+
+    public void setIsStart() {
+        this.isStart = true;
+    }
+
+    public boolean isFinish() {
+        return isFinish;
+    }
+
+    public void setIsFinish() {
+        this.isFinish = true;
     }
 
     public int getRow() {

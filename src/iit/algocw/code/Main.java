@@ -9,7 +9,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("src/iit/algocw/example_mazes/maze10_3.txt"));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("src/iit/algocw/example_mazes/maze10_2.txt"));
             List<String> lines = new ArrayList<>();
             String line;
 
@@ -31,12 +31,13 @@ public class Main {
 
             for (int i = 0; i < maze.getRows(); i++) {
                 for (int j = 0; j < maze.getCols(); j++) {
-                    if (maze.getNodes()[i][j].isWall()) continue;
-
+                    if (maze.getMaze()[i][j].isWall()) continue;
                     if (mazeData[i][j] == 'S') {
-                        start = maze.getNodes()[i][j];
+                        start = maze.getMaze()[i][j];
+                        maze.getMaze()[i][j].setIsStart();
                     } else if (mazeData[i][j] == 'F') {
-                        finish = maze.getNodes()[i][j];
+                        finish = maze.getMaze()[i][j];
+                        maze.getMaze()[i][j].setIsFinish();
                     }
                 }
             }
@@ -47,14 +48,14 @@ public class Main {
                     System.out.println("Shortest path from start to finish:");
                     for (int i = 0; i < shortestPath.size(); i++) {
                         Node node = shortestPath.get(i);
-                        System.out.println((i + 1) + ". Move to (" + node.getRow() + ", " + node.getCol() + ")");
+                        System.out.println((i + 1) + ". Move to (" + node.getRow() + "," + node.getCol() + ")");
                     }
                     System.out.println("Done!");
                 } else {
                     System.out.println("No path found from start to finish.");
                 }
             } else {
-                System.out.println("Start or finish node not found in the maze.");
+                System.out.println("Start or finish cell not found in the maze.");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  * <h1>AStar</h1>
- * <p>Method to find the shortest distance (findShortestDistance)</p>
+ * <p>One of the methods to find the shortest distance from one node to another (use findShortestDistance function)</p>
  */
 public class AStar {
     /**
@@ -22,21 +22,22 @@ public class AStar {
         Map<Node, Node> cameFrom = new HashMap<>();
 
         start.setgCost(0);
-        start.sethCost(calculateHCost(start, finish));
+        start.sethCost(calculateHeuristicValue(start, finish));
         start.setfCost(calculateFCost(start));
+
         openQueue.add(start);
 
         while (!openQueue.isEmpty()) {
             Node currentNode = openQueue.poll();
 
-            if (currentNode.equals(finish)) {
+            if (currentNode.equals(finish))
                 return reconstructPath(cameFrom, finish);
-            }
 
             closedSet.add(currentNode);
 
             Map<Node, Integer> neighborNodes = maze.getNeighborNodes(currentNode);
-            for (Map.Entry<Node, Integer> entry: neighborNodes.entrySet()) {
+
+            for (Map.Entry<Node, Integer> entry : neighborNodes.entrySet()) {
                 Node neighbor = entry.getKey();
                 Integer gCost = entry.getValue();
 
@@ -44,13 +45,15 @@ public class AStar {
 
                 double newGCost = currentNode.getgCost() + gCost;
 
+                // if the neighbor is not in the openQueue or the new gCost is less than the current gCost of the neighbor.
                 if (!openQueue.contains(neighbor) || newGCost < neighbor.getgCost()) {
-                    cameFrom.put(neighbor, currentNode);
                     neighbor.setgCost(newGCost);
-                    neighbor.sethCost(calculateHCost(neighbor, finish));
+                    neighbor.sethCost(calculateHeuristicValue(neighbor, finish));
                     neighbor.setfCost(calculateFCost(neighbor));
+                    cameFrom.put(neighbor, currentNode);
 
                     if (!openQueue.contains(neighbor)) {
+                        System.out.println(neighbor + "\n");
                         openQueue.add(neighbor);
                     }
                 }
@@ -61,41 +64,37 @@ public class AStar {
     }
 
     /**
-     * <h2>Calculating heuristic cost</h2>
+     * <h2>calculateHeuristicValue</h2>
      * @param node the current node
      * @param finishNode the finishing node
-     * @return the heuristic value between the nodes.
+     * @return the heuristic value
      */
-    private double calculateHCost(Node node, Node finishNode) {
+    private double calculateHeuristicValue(Node node, Node finishNode) {
         return Math.sqrt(Math.pow((finishNode.getRow() - node.getRow()), 2) + Math.pow((finishNode.getCol() - node.getCol()), 2));
     }
 
     /**
-     * <h2>Calculate the f cost</h2>
-     * <p>FCost = HCost + GCost</p>
-     * @param node the node we want to find the FCost
-     * @return the FCost
+     * <h2>calculateFCost</h2>
+     * @param node the current node
+     * @return the fCost
      */
     private double calculateFCost(Node node) {
         return node.getgCost() + node.gethCost();
     }
 
     /**
-     * <h2>Reconstruct Path</h2>
-     * <p>This method reconstructs the shortest path and returns the list</p>
-     * @param cameFrom a map where the previous and the current nodes are stored
-     * @param current the current node
-     * @return the shortest path list
+     * <h2>reconstructPath</h2>
+     * @param cameFrom the map of the nodes
+     * @param currentNode the current node
+     * @return the path in a list
      */
-    private List<Node> reconstructPath(Map<Node, Node> cameFrom, Node current) {
+    private List<Node> reconstructPath(Map<Node, Node> cameFrom, Node currentNode) {
         List<Node> path = new ArrayList<>();
-        path.add(current);
+        path.add(currentNode);
 
-        System.out.println(cameFrom);
-
-        while (cameFrom.containsKey(current)) {
-            current = cameFrom.get(current);
-            path.add(current);
+        while (cameFrom.containsKey(currentNode)) {
+            currentNode = cameFrom.get(currentNode);
+            path.add(currentNode);
         }
 
         Collections.reverse(path);

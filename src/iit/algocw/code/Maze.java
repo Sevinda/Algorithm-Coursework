@@ -12,7 +12,7 @@ import java.util.Map;
 public class Maze {
     private int rows;
     private int cols;
-    private Node[][] nodes;
+    private Node[][] maze;
 
     /**
      * <h2>Maze Constructor</h2>
@@ -22,43 +22,48 @@ public class Maze {
     public Maze(char[][] mazeData) {
         rows = mazeData.length;
         cols = mazeData[0].length;
-        nodes = new Node[rows][cols];
+        maze = new Node[rows][cols];
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                nodes[i][j] = new Node(i, j, mazeData[i][j] == '0');
+                maze[i][j] = new Node(i, j, mazeData[i][j] == '0');
             }
         }
     }
 
     /**
-     * <h3>getNeighborNodes function</h3>
+     * <h2>getNeighborNodes function</h2>
      * <p>Neighbors are nodes where it is adjacent to a wall or it is the last node in the maze</p>
-     *
      * @param currentNode the current node where the pointer is.
      * @return the map of neighbors the "current node" and gCost.
      */
     public Map<Node, Integer> getNeighborNodes(Node currentNode) {
         Map<Node, Integer> neighbors = new HashMap<>();
 
-        int[] xDirection = {0, 0, -1, 1};
-        int[] yDirection = {-1, 1, 0, 0};
+        int[] x = {1, 0, -1, 0};
+        int[] y = {0, 1, 0, -1};
 
         for (int i = 0; i < 4; i++) {
-            int newNodeRow = currentNode.getRow();
-            int newNodeCol = currentNode.getCol();
+            int tempRow = currentNode.getRow();
+            int tempCol = currentNode.getCol();
             int gCostCounter = 0;
 
-            while ((newNodeRow + xDirection[i] >= 0 && newNodeRow + xDirection[i] < nodes.length) && (newNodeCol + yDirection[i] >= 0 && newNodeCol + yDirection[i] < nodes[0].length) && !nodes[newNodeRow + xDirection[i]][newNodeCol + yDirection[i]].isWall()) {
-                newNodeRow += xDirection[i];
-                newNodeCol += yDirection[i];
+            while (tempRow + x[i] >= 0 && tempRow + x[i] < maze.length && tempCol + y[i] >= 0 && tempCol + y[i] < maze[0].length && !maze[tempRow + x[i]][tempCol + y[i]].isWall()) {
+                // if maze[tempRow + x[i]][tempCol + y[i]] is the finish node add to the neighbors and break the loop
+                if (maze[tempRow][tempCol].isFinish()) {
+                    neighbors.put(maze[tempRow][tempCol], gCostCounter);
+                    break;
+                }
+                tempRow += x[i];
+                tempCol += y[i];
                 gCostCounter++;
             }
 
-            if (newNodeRow != currentNode.getRow() || newNodeCol != currentNode.getCol())
-                neighbors.put(nodes[newNodeRow][newNodeCol], gCostCounter);
+            if (tempRow != currentNode.getRow() || tempCol != currentNode.getCol())
+                neighbors.put(maze[tempRow][tempCol], gCostCounter);
         }
 
+        System.out.println(neighbors);
         return neighbors;
     }
 
@@ -78,37 +83,11 @@ public class Maze {
         this.cols = cols;
     }
 
-    public Node[][] getNodes() {
-        return nodes;
+    public Node[][] getMaze() {
+        return maze;
     }
 
-    public void setNodes(Node[][] nodes) {
-        this.nodes = nodes;
+    public void setMaze(Node[][] maze) {
+        this.maze = maze;
     }
 }
-
-//    public Map<Node, Integer> getNeighborNodes(Node currentNode) {
-//        Map<Node, Integer> neighbors = new HashMap<>();
-//
-//        int[] xDirection = {0, 0, -1, 1};
-//        int[] yDirection = {-1, 1, 0, 0};
-//
-//        for (int i = 0; i < 4; i++) {
-//            int newNodeRow = currentNode.getRow() + xDirection[i];
-//            int newNodeCol = currentNode.getCol() + yDirection[i];
-//            int gCostCounter = 0;
-//
-//            while (newNodeRow >= 0 && newNodeRow < nodes.length && newNodeCol >= 0 && newNodeCol < nodes[0].length && nodes[newNodeRow][newNodeCol].isWall()) {
-//                newNodeRow += xDirection[i];
-//                newNodeCol += yDirection[i];
-//                gCostCounter++;
-//            }
-//
-//            // Add the neighbor node and its associated gCost to the map
-//            if (newNodeRow != currentNode.getRow() || newNodeCol != currentNode.getCol()) {
-//                neighbors.put(nodes[newNodeRow][newNodeCol], gCostCounter);
-//            }
-//        }
-//
-//        return neighbors;
-//    }
